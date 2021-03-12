@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // general function for saving data
-export async function saveData(key, value) {
+export async function saveData(key: string, value: any) {
     if (_shouldBeStringidiedForStorage(value)) {
         value = JSON.stringify(value);
         console.log("Value has been stringified:" + value);
@@ -18,11 +18,11 @@ export async function saveData(key, value) {
     }
 }
 
-export async function loadData(key, destringify) {
+export async function loadData(key: string, destringify: boolean) {
     try {
         const data = await AsyncStorage.getItem(key);
         console.log("Data loaded. Key: " + key + ", value: " + data);
-        if (destringify) {
+        if (destringify && data) {
             return JSON.parse(data);
         }
         return data;
@@ -32,38 +32,16 @@ export async function loadData(key, destringify) {
     }
 }
 
-/*export async function saveUserData(userData) {
-    try {
-        await AsyncStorage.setItem(asyncStorageKeys.USER_DATA, JSON.stringify(userData));
-        console.log("User data saved:");
-        console.log(userData);
-    } catch {
-        console.error("Unable to store user data.");
-    }
-}
-
-export async function loadUserData() {
-    try {
-        const userObject = await AsyncStorage.getItem(asyncStorageKeys.USER_DATA);
-        const userData = JSON.parse(userObject);
-        console.log("User data loaded: ");
-        console.log(userData);
-        return userData;
-    } catch (e) {
-        console.error("Failed to load user!");
-    }
-}*/
-
-export async function removeItem(key) {
+export async function removeItem(key: string) {
     try {
         await AsyncStorage.removeItem(key);
-        console.log("Item has been removed from local storage: " + item);
+        console.log("Item has been removed from local storage: " + key);
     } catch (e) {
         console.error("Unable to remove item: " + key);
     }
 }
 
-function _shouldBeStringidiedForStorage(value) {
+function _shouldBeStringidiedForStorage(value: any) {
     // only selected non-strings must be stringified
     if (typeof value !== "string") {
         switch (typeof value) {

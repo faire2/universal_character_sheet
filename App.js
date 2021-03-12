@@ -2,15 +2,17 @@ import {StatusBar} from "expo-status-bar";
 import React from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import Dashboard from "./components/dahsboard/Dashboard";
-import {NavigationLocations} from "./common/constants/locations";
+import Login from "./components/Login.tsx";
+import Signup from "./components/Signup.tsx";
+import Dashboard from "./components/dashboard/Dashboard";
+import {NavigationLocations} from "./common/constants/locations.ts";
 import {NavigationContainer} from "@react-navigation/native";
-import {BasicView} from "./styling/commonStyles";
-import {AuthProvider, useAuth} from "./common/context/AuthContext";
-import {DbProvider} from "./common/context/DbContext";
+import {BasicView} from "./common/styling/commonStyles";
+import {AuthProvider} from "./firebase/context/AuthContext.tsx";
+import {DbProvider} from "./firebase/context/DbContext.tsx";
+import Sheet from "./components/sheet/Sheet.tsx";
 
+// todo transform to jsx
 export default function App() {
     console.log("App starting");
 
@@ -65,6 +67,15 @@ function MyStack() {
                 options={
                     {
                         title: "Dashboard",
+                        headerLeft: null
+                    }}
+            />
+            <Stack.Screen
+                name={NavigationLocations.SHEET}
+                component={Sheet}
+                options={
+                    {
+                        title: "Character sheet",
                         headerLeft: null
                     }}
             />

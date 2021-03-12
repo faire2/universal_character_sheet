@@ -1,18 +1,19 @@
 import React, {useState} from "react";
-import {Alert} from "react-native-web";
+import {Alert, Button} from "react-native";
 import {NavigationLocations} from "../common/constants/locations";
 import {logNavigationError} from "../common/functions/commonFunctions";
-import {BasicInput, BasicLink, BasicView, Preloader} from "../styling/commonStyles";
-import {Button} from "react-native";
-import {useAuth} from "../common/context/AuthContext";
-import {saveData} from "../common/functions/asyncStorageFunctions";
+import {saveData} from "../common/functions/asyncStorage";
+import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
+import {useAuth} from "../firebase/context/AuthContext";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
+import {NavigationProps} from "../common/types/generalTypes";
+import firebase from "firebase";
 
-export default function Login(props) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(null); //todo display error message
+export default function Login(props: NavigationProps) {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>(""); //todo display error message
     const { signIn } = useAuth();
 
 
@@ -22,7 +23,7 @@ export default function Login(props) {
         } else {
             setIsLoading(true);
             signIn(email, password)
-                .then(res => {
+                .then((res: firebase.auth.UserCredential) => {
                     console.log("User logged in");
                     console.log(res);
                     setIsLoading(false);
@@ -34,9 +35,9 @@ export default function Login(props) {
                     setEmail("");
                     setPassword("");
                     props.navigation.navigate(NavigationLocations.DASHBOARD)
-                        .catch(e => logNavigationError(e));
+                        .catch((e: Error) => logNavigationError(e));
                 })
-                .catch(e => setErrorMessage(e));
+                .catch((e: Error) => setErrorMessage(e.message));
         }
     }
 

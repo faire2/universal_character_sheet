@@ -1,17 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {BasicView} from "../../styling/commonStyles";
+
+import {loadData, removeItem} from "../../common/functions/asyncStorage";
+import {BasicView} from "../../common/styling/commonStyles";
 import {NavigationLocations} from "../../common/constants/locations";
 import {Button} from "react-native";
-import {loadData, removeItem} from "../../common/functions/asyncStorageFunctions";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
-import {useAuth} from "../../common/context/AuthContext";
-import {useDb} from "../../common/context/DbContext";
+import {useAuth} from "../../firebase/context/AuthContext";
+import {useDb} from "../../firebase/context/DbContext";
 import {collections} from "../../common/constants/collections";
+import {loadDbSheetsNames, updateSheetsIncludingDb, updateSheetsLocally} from "./dashboardFunctions";
 import {Sheets} from "./Sheets";
-import {loadStoreSheetNames, updateSheetsIncludingDb, updateSheetsLocally} from "./dashboardFunctions";
+import {ISheet} from "../../common/types/sheetTypes";
+import {NavigationProps} from "../../common/types/generalTypes";
 
-export default function Dashboard(props) {
-    const [sheetsNames, setSheetsNames] = useState([]);
+export default function Dashboard(props: NavigationProps) {
+    const [sheets, setSheets] = useState<Array<ISheet>>([]);
 
     const {user} = useAuth();
     const {signOut} = useAuth();
@@ -19,14 +22,14 @@ export default function Dashboard(props) {
 
     // we try to fetch sheet names from local storage to make the first load faster
     useEffect(() => {
-        async function fetchStoreSheetNames() {
-            return await loadData(asyncStorageKeys.SHEETS_NAMES, true);
+        async function fetchStoreSheets() {
+            return await loadData(asyncStorageKeys.SHEETS, true);
         }
 
-        fetchStoreSheetNames()
-            .then(res => res && setSheetsNames(res))
+        fetchStoreSheets()
+            .then(res => res && setSheets(res))
             .catch(e => {
-                console.info("Unable to fetch local sheet names: ");
+                console.info("Unable to fetch local sheets: ");
                 console.error(e);
             });
     }, []);
@@ -35,9 +38,9 @@ export default function Dashboard(props) {
     useEffect(() => {
         // we can only call the store if we already have the user object ready
         if (user.uid) {
-            loadStoreSheetNames(db, user.uid)
-                .then(sheetNames => {
-                    updateSheetsLocally(sheetNames, setSheetsNames)
+            loadDbSheetsNames(db, user.uid)
+                .then(sheets => {
+                    updateSheetsLocally(sheets, setSheets)
                 })
                 .catch(e => {
                     console.info("Unable to fetch local sheet names: ");
@@ -46,12 +49,14 @@ export default function Dashboard(props) {
         }
     }, [user]);
 
-    function removeSheet(i) {
+    function removeSheet(i: number) {
         console.log("Removing sheet with i: " + i);
         if (window.confirm("Do you really want to get rid of this sheet? It shall be taken, but not returned...")) {
-            const tSheetNames = [...sheetsNames];
+            const tSheetNames = [...sheets];
             tSheetNames.splice(i, 1);
-            updateSheetsIncludingDb(tSheetNames, sheetsNames[i].id, setSheetsNames, db, user.uid);
+            if (sheets[i].id !== undefined) {
+                sheets[i].id && updateSheetsIncludingDb(tSheetNames, sheets[i].id!, setSheets, db, user.uid);
+            }
         }
     }
 
@@ -66,14 +71,17 @@ export default function Dashboard(props) {
     function createNewSheet() {
         const sheetName = "New sheet";
         console.log("Creating a new sheet");
+        const timesStamp = Date.now();
         db.collection(collections.USERS).doc(user.uid).collection(collections.SHEETS).add({
-            sheetName: sheetName
+            sheetName: sheetName,
+            timeStamp: timesStamp,
+            fieldsArray: [],
         })
             .then(() => {
                 console.log("New sheet added for user " + user.uid + " with name " + sheetName);
-                loadStoreSheetNames(db, user.uid)
+                loadDbSheetsNames(db, user.uid)
                     .then(sheetNames => {
-                        updateSheetsLocally(sheetNames, setSheetsNames)
+                        updateSheetsLocally(sheetNames, setSheets)
                     })
                     .catch(e => {
                         console.info("Unable to fetch local sheet names: ");
@@ -81,7 +89,7 @@ export default function Dashboard(props) {
                     });
             })
             .catch((e) => {
-                console.warning("Received error while trying to add a new sheet for user" + user.uid + " with name " + sheetName);
+                console.warn("Received error while trying to add a new sheet for user" + user.uid + " with name " + sheetName);
                 console.error(e);
             });
     }
@@ -105,7 +113,7 @@ export default function Dashboard(props) {
 
     return (
         <BasicView>
-            <Sheets sheetsNames={sheetsNames} removeSheet={removeSheet}/>
+            <Sheets sheets={sheets} removeSheet={removeSheet}/>
             <Button title="New sheet" onPress={() => createNewSheet()}/>
             <Button title="Logout" onPress={() => logOut()}/>
         </BasicView>
