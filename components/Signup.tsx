@@ -4,12 +4,11 @@ import {loadData, saveData} from "../common/functions/asyncStorage";
 import {firebaseApp} from "../firebase/config";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
 import {Alert, Button, ScrollView} from "react-native";
-import {FirebaseError} from "../common/constants/firebaseErrors";
+import {getErrorMessage} from "../common/constants/firebaseErrors";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDb} from "../firebase/context/DbContext";
 import {collections} from "../common/constants/collections";
-import {NavigationProps} from "../common/types/generalTypes";
+import {IFirebaseError, NavigationProps} from "../common/types/generalTypes";
 
 export default function Signup(props: NavigationProps) {
     const [displayName, setDisplayName] = useState("");
@@ -26,7 +25,6 @@ export default function Signup(props: NavigationProps) {
                         props.navigation.navigate(NavigationLocations.DASHBOARD);
                     } else {
                         console.log("No user is signed in.");
-                        console.log(AsyncStorage.getAllKeys());
                     }
                 }
             )
@@ -49,9 +47,8 @@ export default function Signup(props: NavigationProps) {
                 "If you want to get in, I will need both valid email and reasonable password. No sorry, natural 20 charisma" +
                 " check does not change that.",
                 [{
-                    text: "Button text",
-                    onPress: () => console.log("button pressed"), // todo modify
-                    style: "cancel" // todo modify
+                    text: "ok",
+                    style: "cancel"
                 }],
                 {cancelable: true});
         } else {
@@ -95,28 +92,10 @@ export default function Signup(props: NavigationProps) {
                     }
 
                 })
-                .catch(error => {
-                    console.error(error);
-                    let alertText = "";
-                    switch (error.code) {
-                        case FirebaseError.INVALID_EMAIL:
-                            alertText = "This does not look like a valid email address. You know what? " +
-                                "Let's pretend it did not happen and try it again. Hello, adventurer, can I have your " +
-                                "email address?";
-                            break;
-                        case FirebaseError.WEAK_PASSWORD:
-                            alertText = "Well, that password is not too short. Look, I really liked it, " +
-                                "it had a nice ring to it. But you know, there are certain rules ";
-                            break;
-                        case FirebaseError.EMAIL_IN_USE:
-                            alertText = "Someone has already used this email. Perhaps you are sleep-registering instead " +
-                                "of sleep-walking?";
-                            break;
-                        default:
-                            alertText = "Sorry, something went wrong: " + error.message;
-                    }
-                    console.log(error.code);
-                    Alert.alert(alertText);
+                .catch((e: IFirebaseError) => {
+                    let errorMesage: string = getErrorMessage(e);
+                    console.info(errorMesage);
+                    Alert.alert(getErrorMessage(e));
                 })
         }
     }

@@ -6,14 +6,14 @@ import {saveData} from "../common/functions/asyncStorage";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
 import {useAuth} from "../firebase/context/AuthContext";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
-import {NavigationProps} from "../common/types/generalTypes";
+import {IFirebaseError, NavigationProps} from "../common/types/generalTypes";
 import firebase from "firebase";
+import {getErrorMessage} from "../common/constants/firebaseErrors";
 
 export default function Login(props: NavigationProps) {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>(""); //todo display error message
     const { signIn } = useAuth();
 
 
@@ -37,7 +37,12 @@ export default function Login(props: NavigationProps) {
                     props.navigation.navigate(NavigationLocations.DASHBOARD)
                         .catch((e: Error) => logNavigationError(e));
                 })
-                .catch((e: Error) => setErrorMessage(e.message));
+                .catch((e: IFirebaseError) => {
+                    let errorMesage: string = getErrorMessage(e);
+                    console.info(errorMesage);
+                    Alert.alert(getErrorMessage(e));
+                    }
+                );
         }
     }
 

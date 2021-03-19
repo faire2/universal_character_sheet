@@ -21,3 +21,8 @@ export interface NavigationProps {
         navigate: Function
     };
 }
+
+export interface IFirebaseError {
+    code: string,
+    message: string
+}
