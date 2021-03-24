@@ -1,13 +1,12 @@
 import React from "react";
 import {AppColors, BasicText, BasicView, ColoredText, RowButton, RowView} from "../../common/styling/commonStyles";
 import {View} from "react-native";
-import {useNavigation} from "@react-navigation/native";
 import {NavigationLocations} from "../../common/constants/locations";
 import {ISheet} from "../../common/types/sheetTypes";
 
 // todo removeSheet should be declared e.g. type SuccessHandler = (address: string) => string;
-export function Sheets(props: {sheets: Array<ISheet>, removeSheet: any}) {
-    const navigation = useNavigation();
+export function Sheets(props: {sheets: Array<ISheet>, removeSheet: any, navigation: {
+        navigate: Function };}) {
 
     return (
         <BasicView>
@@ -19,7 +18,7 @@ export function Sheets(props: {sheets: Array<ISheet>, removeSheet: any}) {
                         </BasicText>
                     </View>
                     <RowView style={{flex: 2}}>
-                        <RowButton color={AppColors.BLUE} onPress={() => navigation.navigate(NavigationLocations.SHEET,
+                        <RowButton color={AppColors.BLUE} onPress={() => props.navigation.navigate(NavigationLocations.SHEET,
                             {
                                 sheet: sheet,
                             })}>

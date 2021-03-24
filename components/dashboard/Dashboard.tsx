@@ -113,7 +113,7 @@ export default function Dashboard(props: NavigationProps) {
 
     return (
         <BasicView>
-            <Sheets sheets={sheets} removeSheet={removeSheet}/>
+            <Sheets sheets={sheets} removeSheet={removeSheet} navigation={props.navigation}/>
             <Button title="New sheet" onPress={() => createNewSheet()}/>
             <Button title="Logout" onPress={() => logOut()}/>
         </BasicView>
