@@ -6,7 +6,7 @@ export type Firestore = firebase.firestore.Firestore;
 export interface ISheet {
     sheetName: string,
     timeStamp: number,
-    fieldsArray: Array<ISection | IText | IControlledNumber>,
+    fieldsArray: IElementUnion[],
     id?: string
 }
 
