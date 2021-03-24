@@ -16,12 +16,6 @@ export interface IDb {
     db: Firestore,
 }
 
-export interface NavigationProps {
-    navigation: {
-        navigate: Function
-    };
-}
-
 export interface IFirebaseError {
     code: string,
     message: string

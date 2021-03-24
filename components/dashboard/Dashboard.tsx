@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 
 import {loadData, removeItem} from "../../common/functions/asyncStorage";
 import {BasicView} from "../../common/styling/commonStyles";
-import {NavigationLocations} from "../../common/constants/locations";
+import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
 import {Button} from "react-native";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
 import {useAuth} from "../../firebase/context/AuthContext";
@@ -11,9 +11,11 @@ import {collections} from "../../common/constants/collections";
 import {loadDbSheetsNames, updateSheetsIncludingDb, updateSheetsLocally} from "./dashboardFunctions";
 import {Sheets} from "./Sheets";
 import {ISheet} from "../../common/types/sheetTypes";
-import {NavigationProps} from "../../common/types/generalTypes";
+import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 
-export default function Dashboard(props: NavigationProps) {
+type Props = StackScreenProps<RootStackParamList, NavigationLocations.DASHBOARD>
+
+export default function Dashboard({navigation}: Props) {
     const [sheets, setSheets] = useState<Array<ISheet>>([]);
 
     const {user} = useAuth();
@@ -64,7 +66,7 @@ export default function Dashboard(props: NavigationProps) {
         await removeItem(asyncStorageKeys.USER_LOGGED_IN);
         signOut().then(() => {
             console.log("User logged out.");
-            props.navigation.navigate(NavigationLocations.LOGIN);
+            navigation.navigate(NavigationLocations.LOGIN);
         })
     }
 
@@ -113,7 +115,7 @@ export default function Dashboard(props: NavigationProps) {
 
     return (
         <BasicView>
-            <Sheets sheets={sheets} removeSheet={removeSheet} navigation={props.navigation}/>
+            <Sheets sheets={sheets} removeSheet={removeSheet} navigation={navigation}/>
             <Button title="New sheet" onPress={() => createNewSheet()}/>
             <Button title="Logout" onPress={() => logOut()}/>
         </BasicView>

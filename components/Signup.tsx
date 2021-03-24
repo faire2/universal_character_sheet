@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {NavigationLocations} from "../common/constants/locations";
+import {NavigationLocations, RootStackParamList} from "../common/navigation/locations";
 import {loadData, saveData} from "../common/functions/asyncStorage";
 import {firebaseApp} from "../firebase/config";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
@@ -8,9 +8,12 @@ import {getErrorMessage} from "../common/constants/firebaseErrors";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
 import {useDb} from "../firebase/context/DbContext";
 import {collections} from "../common/constants/collections";
-import {IFirebaseError, NavigationProps} from "../common/types/generalTypes";
+import {IFirebaseError} from "../common/types/generalTypes";
+import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 
-export default function Signup(props: NavigationProps) {
+type Props = StackScreenProps<RootStackParamList, NavigationLocations.SIGNUP>
+
+export default function Signup({navigation}: Props) {
     const [displayName, setDisplayName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +25,7 @@ export default function Signup(props: NavigationProps) {
         loadData(asyncStorageKeys.USER_LOGGED_IN, true)
             .then(isUserLoggedIn => {
                     if (isUserLoggedIn) {
-                        props.navigation.navigate(NavigationLocations.DASHBOARD);
+                        navigation.navigate(NavigationLocations.DASHBOARD);
                     } else {
                         console.log("No user is signed in.");
                     }
@@ -78,14 +81,14 @@ export default function Signup(props: NavigationProps) {
                             email: res.user.email,
                             displayName: displayName,
                             uid: uid,
-                        }).then(() =>  console.log("Created new user document with id: " + uid))
+                        }).then(() => console.log("Created new user document with id: " + uid))
                             .catch(e => {
                                     console.warn("Unable to create a document for new user. Error:");
                                     console.error(e);
                                 }
                             );
                         // reroute to dashboard
-                        props.navigation.navigate(NavigationLocations.DASHBOARD);
+                        navigation.navigate(NavigationLocations.DASHBOARD);
                     } else {
                         console.info(res);
                         throw new Error("Could not retrieve user object.");
@@ -109,7 +112,7 @@ export default function Signup(props: NavigationProps) {
                             maxLength={15} secureTextEntry={true}/>
                 <BasicInput placeholder="name" value={displayName} onChangeText={(val) => setDisplayName(val)}/>
                 <Button title="Signup" onPress={() => registerUser()}/>
-                <BasicLink onPress={() => props.navigation.navigate(NavigationLocations.LOGIN)}>
+                <BasicLink onPress={() => navigation.navigate(NavigationLocations.LOGIN)}>
                     Already registered? Click here to log in...
                 </BasicLink>
             </ScrollView>

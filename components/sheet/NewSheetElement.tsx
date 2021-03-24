@@ -31,7 +31,8 @@ export default function NewSheetElement() {
             </ViewWithWidthAndMargin>
             <BasicText> - </BasicText>
             <ViewWithWidthAndMargin width={15}>
-                <BasicInput placeholder={"Value"} value={fieldValue} onChangeText={(val: string) => onValueChange(val)}/>
+                <BasicInput placeholder={"Value"} value={fieldValue}
+                            onChangeText={(val: string) => onValueChange(val)}/>
             </ViewWithWidthAndMargin>
             {controlledVisible &&
             <RowView>
@@ -68,6 +69,6 @@ const ButtonText = styled(ColoredText)`
   font-size: smaller;
 `;
 
-const ViewWithWidthAndMargin = styled(ViewWithWidth)<{width: number}>`
+const ViewWithWidthAndMargin = styled(ViewWithWidth)<{ width: number }>`
   margin-left: 10px;
 `;

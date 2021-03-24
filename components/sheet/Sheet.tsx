@@ -3,10 +3,12 @@ import {AppColors, BasicText, BasicView, ColoredText, WideButton} from "../../co
 import {View} from "react-native";
 import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
-import {ISheet} from "../../common/types/sheetTypes";
+import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
+import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
 
-export default function Sheet(props: {route: {params: {sheet: ISheet}}}) {
-    const sheet = props.route.params.sheet;
+type Props = StackScreenProps<RootStackParamList, NavigationLocations.SHEET>
+
+export default function Sheet({sheet}: Props) {
     const sheetFieldsArray = sheet.fieldsArray;
 
     return (
