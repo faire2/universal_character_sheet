@@ -29,6 +29,7 @@
     "esModuleInterop": true
   },
   "exclude": [
-    "app/__tests__/" // exclude test files
+    "app/__tests__/", // exclude test files,
+    "node_modules"
   ]
 }

@@ -5,16 +5,18 @@ import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
+import {IElementUnion} from "../../common/types/sheetTypes";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.SHEET>
 
-export default function Sheet({sheet}: Props) {
+export default function Sheet({route}: Props) {
+    const {sheet} = route.params;
     const sheetFieldsArray = sheet.fieldsArray;
 
     return (
         <BasicView>
             <BasicText>{sheet.sheetName}</BasicText>
-            {sheetFieldsArray.map((element, i) => {
+            {sheetFieldsArray.map((element: IElementUnion, i: number) => {
                     return (
                         <View key={i}>
                             {transformToJsx(element, i)}

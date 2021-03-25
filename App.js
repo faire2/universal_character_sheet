@@ -11,7 +11,7 @@ export default function App() {
     console.log("App starting");
 
     return (
-        //<Provider store={store}> todo implement with rest of Redux
+        //<Provider store={store}>
             <NavigationContainer>
                 <AuthProvider>
                     <DbProvider>
