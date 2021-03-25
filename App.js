@@ -5,13 +5,15 @@ import {BasicView} from "./common/styling/commonStyles";
 import {AuthProvider} from "./firebase/context/AuthContext.tsx";
 import {DbProvider} from "./firebase/context/DbContext.tsx";
 import {MyStack} from "./common/navigation/NavigationStack";
+import {Provider} from "react-redux";
+import {store} from "./store";
 
 // todo transform to jsx
 export default function App() {
     console.log("App starting");
 
     return (
-        //<Provider store={store}>
+        <Provider store={store}>
             <NavigationContainer>
                 <AuthProvider>
                     <DbProvider>

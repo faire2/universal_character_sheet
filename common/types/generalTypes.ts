@@ -1,15 +1,15 @@
 import {firebaseApp} from "../../firebase/config";
 import {Firestore} from "./sheetTypes";
+import firebase from "firebase";
 
-export interface IUser {
-    uid: string
+export interface IUser extends firebase.UserInfo {
 }
 
 export interface IAuth {
     signOut: Function,
     signIn: Function,
     user: {uid: string},
-    firebaseApp: typeof  firebaseApp
+    firebaseApp: typeof firebaseApp
 }
 
 export interface IDb {
