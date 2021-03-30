@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import {elementType} from "../constants/elementType";
+import {elementType} from "../../common/constants/elementType";
 
 export type Firestore = firebase.firestore.Firestore;
 
@@ -7,7 +7,7 @@ export interface ISheet {
     sheetName: string,
     timeStamp: number,
     fieldsArray: IElementUnion[],
-    id?: string
+    id: string | null,
 }
 
 // SHEET ELEMENTS

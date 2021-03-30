@@ -1,7 +1,7 @@
 import React from "react";
 import {elementType} from "../../common/constants/elementType";
 import {ControlledNumber, Section, Text} from "./sheetComponents";
-import {IElementUnion} from "../../common/types/sheetTypes";
+import {IElementUnion} from "./sheetTypes";
 
 export function transformToJsx(element: IElementUnion, i: number) {
     switch (element.type) {

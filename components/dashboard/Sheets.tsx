@@ -2,7 +2,7 @@ import React from "react";
 import {AppColors, BasicText, BasicView, ColoredText, RowButton, RowView} from "../../common/styling/commonStyles";
 import {View} from "react-native";
 import {NavigationLocations} from "../../common/navigation/locations";
-import {ISheet} from "../../common/types/sheetTypes";
+import {ISheet} from "../sheet/sheetTypes";
 
 // todo removeSheet should be declared e.g. type SuccessHandler = (address: string) => string;
 export function Sheets(props: {

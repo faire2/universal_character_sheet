@@ -1,6 +1,6 @@
 import {ColumnView, Line, RowView, Text50, Text75} from "../../common/styling/commonStyles";
 import React, {FunctionComponent} from "react";
-import {IElementUnion} from "../../common/types/sheetTypes";
+import {IElementUnion} from "./sheetTypes";
 import {elementType} from "../../common/constants/elementType";
 import {transformToJsx} from "./sheetFunctions";
 

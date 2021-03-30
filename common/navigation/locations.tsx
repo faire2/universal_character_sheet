@@ -1,4 +1,4 @@
-import {ISheet} from "../types/sheetTypes";
+import {ISheet} from "../../components/sheet/sheetTypes";
 
 export enum NavigationLocations {
     SIGNUP = "Signup",

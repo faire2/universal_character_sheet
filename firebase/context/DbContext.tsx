@@ -1,6 +1,6 @@
 import {firebaseApp} from "../config";
 import React, {createContext, useEffect, useState} from "react";
-import {Firestore} from "../../common/types/sheetTypes";
+import {Firestore} from "../../components/sheet/sheetTypes";
 import {IDb} from "../../common/types/generalTypes";
 
 const DbContext = createContext({});

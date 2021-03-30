@@ -17,11 +17,9 @@ export const userSlice = createSlice({
         signedIn: (state, action) => {
             const user: IUser = action.payload;
             state.uid = user.uid;
-            debugger
         },
     }
 });
 
 export const {signedIn} = userSlice.actions;
 export default userSlice.reducer;
-

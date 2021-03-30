@@ -5,7 +5,7 @@ import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
-import {IElementUnion} from "../../common/types/sheetTypes";
+import {IElementUnion} from "./sheetTypes";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.SHEET>
 

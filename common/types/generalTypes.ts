@@ -1,5 +1,5 @@
 import {firebaseApp} from "../../firebase/config";
-import {Firestore} from "./sheetTypes";
+import {Firestore} from "../../components/sheet/sheetTypes";
 import firebase from "firebase";
 
 export interface IUser extends firebase.UserInfo {
@@ -19,4 +19,11 @@ export interface IDb {
 export interface IFirebaseError {
     code: string,
     message: string
+}
+
+export enum LoadingStates {
+    IDLE,
+    LOADING,
+    SUCCEEDED,
+    FAILED
 }

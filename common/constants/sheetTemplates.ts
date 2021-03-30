@@ -1,5 +1,5 @@
 import {elementType} from "./elementType";
-import {ISheet} from "../types/sheetTypes";
+import {ISheet} from "../../components/sheet/sheetTypes";
 import cloneDeep from 'lodash/cloneDeep';
 
 
@@ -13,6 +13,7 @@ export function getSheetTemplate(sheetTemplate: template): ISheet {
 const _PF2E: ISheet = {
     sheetName: "Pathfinder 2e character sheet",
     timeStamp: Date.now(),
+    id: null,
     fieldsArray:
         [
             {

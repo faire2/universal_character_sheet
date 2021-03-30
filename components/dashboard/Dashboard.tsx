@@ -11,8 +11,9 @@ import {useDb} from "../../firebase/context/DbContext";
 import {collections} from "../../common/constants/collections";
 import {loadDbSheetsNames, updateSheetsIncludingDb, updateSheetsLocally} from "./dashboardFunctions";
 import {Sheets} from "./Sheets";
-import {ISheet} from "../../common/types/sheetTypes";
-import {useAppSelector} from "../../store";
+import {ISheet} from "../sheet/sheetTypes";
+import {useAppDispatch, useAppSelector} from "../../store";
+import {selectAllSheets, tryToFetch} from "../../store/sheetsSlice";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.DASHBOARD>
 
@@ -22,6 +23,18 @@ export default function Dashboard({navigation}: Props) {
     const {signOut} = useAuth();
     const {db} = useDb();
     const user = useAppSelector(state => state.user);
+
+
+    const storeSheets: ISheet[] = useAppSelector(selectAllSheets);
+    //const singleSheet: ISheet = useAppSelector(state => selectSheetById(state, null));
+    console.log("Current sheets selection");
+    console.log(storeSheets);
+    //console.log(singleSheet);
+    const dispatch = useAppDispatch();
+
+    function fakeFetchSheets() {
+        dispatch(tryToFetch());
+    }
 
     // we try to fetch sheet names from local storage to make the first load faster
     useEffect(() => {
@@ -127,6 +140,7 @@ export default function Dashboard({navigation}: Props) {
             <Sheets sheets={sheets} removeSheet={removeSheet} navigation={navigation}/>
             <Button title="New sheet" onPress={() => createNewSheet()}/>
             <Button title="Logout" onPress={() => logOut()}/>
+            <Button title="Fetch Sheets" onPress={() => fakeFetchSheets()}/>
         </BasicView>
     );
 }

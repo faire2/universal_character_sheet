@@ -1,5 +1,5 @@
 import {collections} from "../../common/constants/collections";
-import {Firestore, ISheet} from "../../common/types/sheetTypes";
+import {Firestore, ISheet} from "../sheet/sheetTypes";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
 import {saveData} from "../../common/functions/asyncStorage";
 
