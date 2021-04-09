@@ -1,82 +1,50 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 import {Button} from "react-native";
+import cloneDeep from 'lodash/cloneDeep';
 
-import {loadData, removeItem} from "../../common/functions/asyncStorage";
+import {removeItem} from "../../common/functions/asyncStorage";
 import {BasicView} from "../../common/styling/commonStyles";
 import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
 import {useAuth} from "../../firebase/context/AuthContext";
 import {useDb} from "../../firebase/context/DbContext";
-import {collections} from "../../common/constants/collections";
-import {loadDbSheetsNames, updateSheetsIncludingDb, updateSheetsLocally} from "./dashboardFunctions";
 import {Sheets} from "./Sheets";
 import {ISheet} from "../sheet/sheetTypes";
-import {useAppDispatch, useAppSelector} from "../../store";
-import {selectAllSheets, tryToFetch} from "../../store/sheetsSlice";
+import {useAppSelector} from "../../store";
+import {addSheet, fetchSheetsFromDb, fetchSheetsLocally, removeSheet, selectAllSheets} from "../../store/sheetsSlice";
+import {useDispatch} from "react-redux";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.DASHBOARD>
 
 export default function Dashboard({navigation}: Props) {
-    const [sheets, setSheets] = useState<Array<ISheet>>([]);
-
     const {signOut} = useAuth();
     const {db} = useDb();
-    const user = useAppSelector(state => state.user);
 
-
-    const storeSheets: ISheet[] = useAppSelector(selectAllSheets);
-    //const singleSheet: ISheet = useAppSelector(state => selectSheetById(state, null));
-    console.log("Current sheets selection");
-    console.log(storeSheets);
-    //console.log(singleSheet);
-    const dispatch = useAppDispatch();
-
-    function fakeFetchSheets() {
-        dispatch(tryToFetch());
-    }
+    const dispatch = useDispatch();
+    const user = useAppSelector(state => state.user.userData);
+    const sheets: ISheet[] = useAppSelector(selectAllSheets);
 
     // we try to fetch sheet names from local storage to make the first load faster
     useEffect(() => {
-        async function fetchStoreSheets() {
-            return await loadData(asyncStorageKeys.SHEETS, true);
-        }
-
-        fetchStoreSheets()
-            .then(res => res && setSheets(res))
-            .catch(e => {
-                console.info("Unable to fetch local sheets: ");
-                console.error(e);
-            });
+        dispatch(fetchSheetsLocally());
     }, []);
 
     // we also try to fetch data from the db and replace local data if successful
+    // we can only call the store if we already have the userData object ready
     useEffect(() => {
-        // we can only call the store if we already have the user object ready
         if (user.uid) {
-            loadDbSheetsNames(db, user.uid)
-                .then(sheets => {
-                    updateSheetsLocally(sheets, setSheets)
-                })
-                .catch(e => {
-                    console.info("Unable to fetch local sheet names: ");
-                    console.error(e);
-                });
+            dispatch(fetchSheetsFromDb({uid: user.uid, db: db}));
         }
     }, [user]);
 
-    function removeSheet(i: number) {
-        console.log("Removing sheet with i: " + i);
-        if (window.confirm("Do you really want to get rid of this sheet? It shall be taken, but not returned...")) {
-            const tSheetNames = [...sheets];
-            tSheetNames.splice(i, 1);
-            if (sheets[i].id && user.uid) {
-                sheets[i].id && updateSheetsIncludingDb(tSheetNames, sheets[i].id!, setSheets, db, user.uid);
-            } else {
-                console.error("Cannot remove sheet: sheet id or uid not provided:");
-                console.info(sheets[i]);
-                console.info(user)
-            }
+    function handleSheetRemoval(i: number) {
+        const sheetId = sheets[i].id;
+        console.log("Removing sheet with id: " + sheetId);
+        if (sheetId) {
+            dispatch((removeSheet({db: db, sheetId: sheetId, sheets: cloneDeep(sheets), uid: user.uid})));
+        } else {
+            console.error("Unable to remove sheet")
         }
     }
 
@@ -86,36 +54,6 @@ export default function Dashboard({navigation}: Props) {
             console.log("User logged out.");
             navigation.navigate(NavigationLocations.LOGIN);
         })
-    }
-
-    function createNewSheet() {
-        if (user.uid) {
-            const sheetName = "New sheet";
-            console.log("Creating a new sheet");
-            const timesStamp = Date.now();
-            db.collection(collections.USERS).doc(user.uid).collection(collections.SHEETS).add({
-                sheetName: sheetName,
-                timeStamp: timesStamp,
-                fieldsArray: [],
-            })
-                .then(() => {
-                    console.log("New sheet added for user " + user.uid + " with name " + sheetName);
-                    loadDbSheetsNames(db, user.uid!)
-                        .then(sheetNames => {
-                            updateSheetsLocally(sheetNames, setSheets)
-                        })
-                        .catch(e => {
-                            console.info("Unable to fetch local sheet names: ");
-                            console.error(e);
-                        });
-                })
-                .catch((e) => {
-                    console.warn("Received error while trying to add a new sheet for user" + user.uid + " with name " + sheetName);
-                    console.error(e);
-                });
-        } else {
-            console.error("Cannot create new sheet, uid not provided: " + user.uid);
-        }
     }
 
     //todo implement
@@ -129,7 +67,7 @@ export default function Dashboard({navigation}: Props) {
                     onPress: () => console.log("Nope!"),
                     style: "cancel"
                 },
-                {text: "Sure!", onPress: () => removeSheet(i)}
+                {text: "Sure!", onPress: () => handleRemoveSheet(i)}
             ],
             {cancelable: false}
         );
@@ -137,10 +75,11 @@ export default function Dashboard({navigation}: Props) {
 
     return (
         <BasicView>
-            <Sheets sheets={sheets} removeSheet={removeSheet} navigation={navigation}/>
-            <Button title="New sheet" onPress={() => createNewSheet()}/>
+            <Sheets sheets={sheets} removeSheet={handleSheetRemoval} navigation={navigation}/>
+            <Button title="New sheet" onPress={() => dispatch(addSheet({db: db, sheets: cloneDeep(sheets),
+                uid: user.uid}))}/>
             <Button title="Logout" onPress={() => logOut()}/>
-            <Button title="Fetch Sheets" onPress={() => fakeFetchSheets()}/>
+            <Button title="Fetch Sheets" onPress={() => dispatch(fetchSheetsFromDb({uid: user.uid, db: db}))}/>
         </BasicView>
     );
 }

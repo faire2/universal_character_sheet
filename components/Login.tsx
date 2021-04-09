@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Alert, Button} from "react-native";
 import {NavigationLocations, RootStackParamList} from "../common/navigation/locations";
-import {logNavigationError} from "../common/functions/commonFunctions";
 import {saveData} from "../common/functions/asyncStorage";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
 import {useAuth} from "../firebase/context/AuthContext";
@@ -37,8 +36,7 @@ export default function Login({navigation}: Props) {
                         });
                     setEmail("");
                     setPassword("");
-                    navigation.navigate(NavigationLocations.DASHBOARD)
-                        .catch((e: Error) => logNavigationError(e));
+                    navigation.navigate(NavigationLocations.DASHBOARD);
                 })
                 .catch((e: IFirebaseError) => {
                         let errorMesage: string = getErrorMessage(e);

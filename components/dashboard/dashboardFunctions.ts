@@ -3,7 +3,7 @@ import {Firestore, ISheet} from "../sheet/sheetTypes";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
 import {saveData} from "../../common/functions/asyncStorage";
 
-export async function loadDbSheetsNames(db: Firestore, uid: string) {
+export async function loadDbSheets(db: Firestore, uid: string) {
     const sheetsRef = db.collection(collections.USERS).doc(uid).collection(collections.SHEETS);
     const sheets: Array<ISheet> = [];
     await sheetsRef.get()
@@ -31,7 +31,7 @@ export function updateSheetsIncludingDb(sheets: Array<ISheet>, sheetId: string, 
     // update componenty
     setSheetNames(sheets);
     // update storage
-    saveData(asyncStorageKeys.SHEETS_NAMES, sheets).catch(e => {
+    saveData(asyncStorageKeys.SHEETS, sheets).catch(e => {
         console.info("Unable to save sheet names locally: ");
         console.error(e);
     });
@@ -44,9 +44,9 @@ export function updateSheetsIncludingDb(sheets: Array<ISheet>, sheetId: string, 
         })
 }
 
-export function updateSheetsLocally(sheetNames: any, setSheetsNames: Function) {
-    setSheetsNames(sheetNames);
-    saveData(asyncStorageKeys.SHEETS_NAMES, sheetNames).catch(e => {
+export function updateSheetsLocally(sheets: any, setSheets: Function) {
+    setSheets(sheets);
+    saveData(asyncStorageKeys.SHEETS, sheets).catch(e => {
         console.info("Unable to save sheet names locally: ");
         console.error(e);
     });

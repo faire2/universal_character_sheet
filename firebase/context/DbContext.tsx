@@ -11,8 +11,7 @@ function DbProvider(props: {children: React.ReactNode}) {
     useEffect(() => {
         const db: Firestore = firebaseApp.firestore();
         setDb(db);
-        console.log("Db set:");
-        console.log(db);
+        console.log("Db set.");
     }, []);
 
     const dbContextValue = {

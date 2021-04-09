@@ -20,19 +20,19 @@ export default function Signup({navigation}: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const {db} = useDb();
 
-    // if user is logged in, reroute him to dashboard
+    // if userData is logged in, reroute him to dashboard
     useEffect(() => {
         loadData(asyncStorageKeys.USER_LOGGED_IN, true)
             .then(isUserLoggedIn => {
                     if (isUserLoggedIn) {
                         navigation.navigate(NavigationLocations.DASHBOARD);
                     } else {
-                        console.log("No user is signed in.");
+                        console.log("No userData is signed in.");
                     }
                 }
             )
             .catch(e => {
-                console.error("Unable check locally if user is logged in.");
+                console.error("Unable check locally if userData is logged in.");
                 console.error(e);
             });
     }, []);
@@ -70,20 +70,20 @@ export default function Signup({navigation}: Props) {
                         // save data for next start of the app
                         saveData(asyncStorageKeys.USER_LOGGED_IN, true)
                             .catch(e => {
-                                    console.error("Unable to save user data:");
+                                    console.error("Unable to save userData data:");
                                     console.error(e);
                                 }
                             );
-                        // create new user in top collection
+                        // create new userData in top collection
                         const uid = res.user.uid;
                         debugger;
                         db.collection(collections.USERS).doc(uid).set({
                             email: res.user.email,
                             displayName: displayName,
                             uid: uid,
-                        }).then(() => console.log("Created new user document with id: " + uid))
+                        }).then(() => console.log("Created new userData document with id: " + uid))
                             .catch(e => {
-                                    console.warn("Unable to create a document for new user. Error:");
+                                    console.warn("Unable to create a document for new userData. Error:");
                                     console.error(e);
                                 }
                             );
@@ -91,7 +91,7 @@ export default function Signup({navigation}: Props) {
                         navigation.navigate(NavigationLocations.DASHBOARD);
                     } else {
                         console.info(res);
-                        throw new Error("Could not retrieve user object.");
+                        throw new Error("Could not retrieve userData object.");
                     }
 
                 })

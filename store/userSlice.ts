@@ -1,22 +1,27 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IUser} from "../common/types/generalTypes";
 
-export const initialUser: IUser = {
-    displayName: "",
-    email: "",
-    phoneNumber: "",
-    photoURL: "",
-    providerId: "",
-    uid: "",
+interface IUserState {
+    userData: IUser
+}
+
+export const initialUser: IUserState = {
+    userData: {
+        displayName: "",
+        email: "",
+        phoneNumber: "",
+        photoURL: "",
+        providerId: "",
+        uid: "",
+    }
 };
 
 export const userSlice = createSlice({
-    name: "user",
+    name: "userData",
     initialState: initialUser,
     reducers: {
-        signedIn: (state, action) => {
-            const user: IUser = action.payload;
-            state.uid = user.uid;
+        signedIn: (state: IUserState, action: PayloadAction<IUser>) => {
+            state.userData = action.payload;
         },
     }
 });

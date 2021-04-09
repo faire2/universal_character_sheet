@@ -1,27 +1,32 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useEffect} from "react";
 import {firebaseApp} from "../config";
 import {IAuth, IUser} from "../../common/types/generalTypes";
 import {useAppDispatch} from "../../store";
-import {initialUser, signedIn} from "../../store/userSlice"
+import {signedIn} from "../../store/userSlice"
 
 const AuthContext = createContext({});
 
 export function AuthProvider(props: { children: React.ReactNode }) {
-    const [user, setUser] = useState<IUser>(initialUser);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const unsubsribe = firebaseApp.auth().onAuthStateChanged(user => {
-            if (user) {
-                dispatch(signedIn(user));
-                setUser(user);
-                console.log("user: " + user.uid);
+        const unsubsribe = firebaseApp.auth().onAuthStateChanged(dbUser => {
+            if (dbUser) {
+                const appUser: IUser = {
+                    displayName: dbUser.displayName,
+                    email: dbUser.email,
+                    phoneNumber: dbUser.phoneNumber,
+                    photoURL: dbUser.photoURL,
+                    providerId: dbUser.providerId,
+                    uid: dbUser.uid
+                };
+                dispatch(signedIn(appUser));
             }
         });
         return () => {
             unsubsribe();
         }
-    }, [user]);
+    }, []);
 
     const authContextValue = {
         firebaseApp,

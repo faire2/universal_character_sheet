@@ -33,7 +33,6 @@ export function MyStack() {
                 options={
                     {
                         title: "Login",
-                        headerLeft: null
                     }
                 }
             />
@@ -43,7 +42,6 @@ export function MyStack() {
                 options={
                     {
                         title: "Dashboard",
-                        headerLeft: null
                     }}
             />
             <Stack.Screen
@@ -52,7 +50,6 @@ export function MyStack() {
                 options={
                     {
                         title: "Character sheet",
-                        headerLeft: null
                     }}
             />
         </Stack.Navigator>

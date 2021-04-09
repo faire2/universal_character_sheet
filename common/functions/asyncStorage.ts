@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export async function saveData(key: string, value: any) {
     if (_shouldBeStringidiedForStorage(value)) {
         value = JSON.stringify(value);
-        console.log("Value has been stringified:" + value);
+        console.log("Value has been stringified.");
     }
     if (typeof value === "string") {
         try {
@@ -52,7 +52,6 @@ function _shouldBeStringidiedForStorage(value: any) {
                 return true;
             default:
                 console.error("Unable to stringify data for storage.");
-                debugger;
                 return null;
         }
     } else {
