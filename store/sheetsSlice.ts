@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {loadData, saveData} from "../common/functions/asyncStorage";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
 import {RootState} from "./index";
@@ -129,19 +129,8 @@ export const sheetsSlice = createSlice({
     name: "sheets",
     initialState: initialSheetsState,
     reducers: {
-        newSheetAdded: (state, action) => {
-            state.sheets.push(action.payload);
-        },
-        sheetRemoved: (state, action) => {
-            const sheetToRemove: undefined | ISheet = state.sheets.find(sheet => sheet.id === action.payload);
-            if (sheetToRemove) {
-                state.sheets.splice(state.sheets.indexOf(sheetToRemove));
-            } else {
-                throw new Error("Unable to find sheet to remove " + action.payload);
-            }
-        },
-        fetchSheets: (state, action) => {
-            state.sheets = action.payload
+        sheetNameChanged: (state, action: PayloadAction<{sheetIndex: number, sheetName: string}>) => {
+            state.sheets[action.payload.sheetIndex].sheetName = action.payload.sheetName;
         },
     },
     extraReducers: builder => {
@@ -194,8 +183,8 @@ export const sheetsSlice = createSlice({
 export default sheetsSlice.reducer;
 
 // EXPORTED ACTIONS
-export const {newSheetAdded, sheetRemoved, fetchSheets} = sheetsSlice.actions;
+export const {sheetNameChanged} = sheetsSlice.actions;
 
 // EXPORTED SELECTORS
 export const selectAllSheets = (state: RootState) => state.sheets.sheets;
-// export const selectSheetById = (state: RootState, sheetId: string | null) => state.sheets.find((sheet: ISheet) => sheet.id === sheetId);
+export const selectSheetById = (state: RootState, index: number) => state.sheets.sheets[index];

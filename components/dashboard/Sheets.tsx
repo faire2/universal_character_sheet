@@ -4,7 +4,6 @@ import {View} from "react-native";
 import {NavigationLocations} from "../../common/navigation/locations";
 import {ISheet} from "../sheet/sheetTypes";
 
-// todo removeSheet should be declared e.g. type SuccessHandler = (address: string) => string;
 export function Sheets(props: {
     sheets: Array<ISheet>, removeSheet: any, navigation: {
         navigate: Function
@@ -21,11 +20,8 @@ export function Sheets(props: {
                         </BasicText>
                     </View>
                     <RowView style={{flex: 2}}>
-                        <RowButton color={AppColors.BLUE}
-                                   onPress={() => props.navigation.navigate(NavigationLocations.SHEET,
-                                       {
-                                           sheet: sheet,
-                                       })}>
+                        <RowButton color={AppColors.BLUE} onPress={() => props.navigation.navigate(NavigationLocations.SHEET,
+                                       {index: i})}>
                             <ColoredText color={AppColors.WHITE}>
                                 Open
                             </ColoredText>

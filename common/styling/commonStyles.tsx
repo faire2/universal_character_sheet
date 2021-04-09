@@ -72,7 +72,7 @@ export const Line = styled.View`
 
 export const RowButton = styled.TouchableOpacity<{color: AppColors}>`
     margin-left: 10px;
-    padding: 2%;
+    padding: 5px;
     background-color: ${props => props.color};
     border-radius: 5px;
 `;
