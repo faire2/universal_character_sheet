@@ -12,58 +12,65 @@ import {View} from "react-native";
 import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
-import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
 import {IElementUnion, ISheet} from "./sheetTypes";
 import {useAppSelector} from "../../store";
 import {selectSheetById, sheetNameChanged} from "../../store/sheetsSlice";
 import styled from "styled-components/native";
 import {useDispatch} from "react-redux";
+import {NavigationLocations, RootStackParamList} from "../../common/navigation/NavigationStack";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.SHEET>
 
 export default function Sheet({route}: Props) {
-    const {index} = route.params;
-    const sheet: ISheet = useAppSelector(state => selectSheetById(state, index));
-    const sheetFieldsArray = sheet.fieldsArray;
+    const {sheetId} = route.params;
+    const sheet: ISheet | undefined = useAppSelector(state => selectSheetById(state, sheetId));
     const dispatch = useDispatch();
 
     const [isEditting, setIsEditing] = useState<boolean>(false);
 
-    return (
-        <BasicView>
-            <HeadRow>
-                {!isEditting ?
-                    <BasicText>{sheet.sheetName}</BasicText> :
-                    <BasicInput placeholder={sheet.sheetName} value={sheet.sheetName}
-                                onChangeText={(e) => dispatch(sheetNameChanged({sheetIndex: index, sheetName: e}))}/>
-                }
-                <RowButton color={AppColors.BLUE} onPress={() => setIsEditing(!isEditting)}>
-                    <ColoredText color={AppColors.WHITE}>Edit mode</ColoredText>
-                </RowButton>
-            </HeadRow>
-            {sheetFieldsArray.map((element: IElementUnion, i: number) => {
-                    return (
-                        <View key={i}>
-                            {transformToJsx(element, i)}
-                        </View>
-                    )
-                }
-            )}
-            <NewSheetElement/>
-            <WideButton color={AppColors.BLUE}>
-                <ColoredText color={AppColors.WHITE}>
-                    Save changes
-                </ColoredText>
-            </WideButton>
-        </BasicView>
-    )
+    if (!sheet) {
+        throw new Error("Did not find sheet with id: " + sheetId);
+    } else {
+        const sheetFieldsArray = sheet.fieldsArray;
+        return (
+            <BasicView>
+                <HeadRow>
+                    {!isEditting ?
+                        <BasicText>{sheet.sheetName}</BasicText> :
+                        <BasicInput placeholder={sheet.sheetName} value={sheet.sheetName}
+                                    onChangeText={(e) => dispatch(sheetNameChanged({
+                                        sheetId: sheetId,
+                                        sheetName: e
+                                    }))}/>
+                    }
+                    <RowButton color={AppColors.BLUE} onPress={() => setIsEditing(!isEditting)}>
+                        <ColoredText color={AppColors.WHITE}>Edit mode</ColoredText>
+                    </RowButton>
+                </HeadRow>
+                {sheetFieldsArray.map((element: IElementUnion, i: number) => {
+                        return (
+                            <View key={i}>
+                                {transformToJsx(element, i)}
+                            </View>
+                        )
+                    }
+                )}
+                <NewSheetElement/>
+                <WideButton color={AppColors.BLUE}>
+                    <ColoredText color={AppColors.WHITE}>
+                        Save changes
+                    </ColoredText>
+                </WideButton>
+            </BasicView>
+        )
+    }
 }
 
 const HeadRow = styled.View`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-`
+`;
 
 // each sheet object is an array of objects representing
 /*const sheetArray =

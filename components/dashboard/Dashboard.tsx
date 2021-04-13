@@ -1,25 +1,22 @@
 import React, {useEffect} from "react";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 import {Button} from "react-native";
-import cloneDeep from 'lodash/cloneDeep';
 
 import {removeItem} from "../../common/functions/asyncStorage";
 import {BasicView} from "../../common/styling/commonStyles";
-import {NavigationLocations, RootStackParamList} from "../../common/navigation/locations";
 import {asyncStorageKeys} from "../../common/constants/asyncStorageKeys";
 import {useAuth} from "../../firebase/context/AuthContext";
-import {useDb} from "../../firebase/context/DbContext";
 import {Sheets} from "./Sheets";
 import {ISheet} from "../sheet/sheetTypes";
 import {useAppSelector} from "../../store";
-import {addSheet, fetchSheetsFromDb, fetchSheetsLocally, removeSheet, selectAllSheets} from "../../store/sheetsSlice";
+import {fetchSheetsFromDb, fetchSheetsLocally, removeSheet, selectAllSheets} from "../../store/sheetsSlice";
 import {useDispatch} from "react-redux";
+import {NavigationLocations, RootStackParamList} from "../../common/navigation/NavigationStack";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.DASHBOARD>
 
 export default function Dashboard({navigation}: Props) {
     const {signOut} = useAuth();
-    const {db} = useDb();
 
     const dispatch = useDispatch();
     const user = useAppSelector(state => state.user.userData);
@@ -34,7 +31,7 @@ export default function Dashboard({navigation}: Props) {
     // we can only call the store if we already have the userData object ready
     useEffect(() => {
         if (user.uid) {
-            dispatch(fetchSheetsFromDb({uid: user.uid, db: db}));
+            dispatch(fetchSheetsFromDb(null));
         }
     }, [user]);
 
@@ -42,7 +39,7 @@ export default function Dashboard({navigation}: Props) {
         const sheetId = sheets[i].id;
         console.log("Removing sheet with id: " + sheetId);
         if (sheetId) {
-            dispatch((removeSheet({db: db, sheetId: sheetId, sheets: cloneDeep(sheets), uid: user.uid})));
+            dispatch((removeSheet({sheetId: sheetId})));
         } else {
             console.error("Unable to remove sheet")
         }
@@ -75,11 +72,10 @@ export default function Dashboard({navigation}: Props) {
 
     return (
         <BasicView>
-            <Sheets sheets={sheets} removeSheet={handleSheetRemoval} navigation={navigation}/>
-            <Button title="New sheet" onPress={() => dispatch(addSheet({db: db, sheets: cloneDeep(sheets),
-                uid: user.uid}))}/>
-            <Button title="Logout" onPress={() => logOut()}/>
-            <Button title="Fetch Sheets" onPress={() => dispatch(fetchSheetsFromDb({uid: user.uid, db: db}))}/>
+            <Sheets sheets={sheets} removeSheet={handleSheetRemoval} navigation={navigation} />
+            <Button title="New sheet" onPress={() => navigation.navigate(NavigationLocations.TEMPLATES)} />
+            <Button title="Logout" onPress={() => logOut()} />
+            <Button title="Fetch Sheets" onPress={() => dispatch(fetchSheetsFromDb(null))} />
         </BasicView>
     );
 }

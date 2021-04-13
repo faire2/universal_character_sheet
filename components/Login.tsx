@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Alert, Button} from "react-native";
-import {NavigationLocations, RootStackParamList} from "../common/navigation/locations";
 import {saveData} from "../common/functions/asyncStorage";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
 import {useAuth} from "../firebase/context/AuthContext";
@@ -9,8 +8,7 @@ import {IFirebaseError} from "../common/types/generalTypes";
 import firebase from "firebase";
 import {getErrorMessage} from "../common/constants/firebaseErrors";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
-
-type Props = StackScreenProps<RootStackParamList, NavigationLocations.LOGIN>
+import {NavigationLocations, RootStackParamList} from "../common/navigation/NavigationStack";
 
 export default function Login({navigation}: Props) {
     const [email, setEmail] = useState<string>("");
@@ -60,3 +58,5 @@ export default function Login({navigation}: Props) {
         </BasicView>
     );
 }
+
+type Props = StackScreenProps<RootStackParamList, NavigationLocations.LOGIN>

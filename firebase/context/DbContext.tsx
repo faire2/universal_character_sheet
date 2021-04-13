@@ -28,3 +28,4 @@ function DbProvider(props: {children: React.ReactNode}) {
 const useDb = () => React.useContext(DbContext) as IDb;
 
 export {DbProvider, useDb};
+export const dbForRedux = firebaseApp.firestore();

@@ -1,12 +1,13 @@
-import {elementType} from "./elementType";
-import {ISheet} from "../../components/sheet/sheetTypes";
+import {elementType} from "../../common/constants/elementType";
+import {ISheet} from "../sheet/sheetTypes";
 import cloneDeep from 'lodash/cloneDeep';
 
 
-export function getSheetTemplate(sheetTemplate: template): ISheet {
+export function getSheetTemplate(sheetTemplate: SheetTemplate): ISheet {
     switch (sheetTemplate) {
-        case template.PF2E:
+        case SheetTemplate.PF2E:
             return cloneDeep(_PF2E);
+        default: throw new Error("Unable to recognize template type, new sheet could not be created")
     }
 }
 
@@ -23,127 +24,127 @@ const _PF2E: ISheet = {
             },
             {
                 type: elementType.TEXT,
-                name: "Ancestry:",
+                name: "Ancestry",
                 value: "",
             },
             {
                 type: elementType.TEXT,
-                name: "Heritage:",
+                name: "Heritage",
                 value: "",
             },
             {
                 type: elementType.TEXT,
-                name: "Background:",
+                name: "Background",
                 value: "",
             },
             {
                 type: elementType.SECTION,
-                name: "Characteristics:",
+                name: "Characteristics",
                 value: [
                     {
                         type: elementType.CONTROLLED_NUMBER,
-                        name: "Hitpoints:",
+                        name: "Hitpoints",
                         value: 0,
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Speed:",
+                        name: "Speed",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Armor class:",
+                        name: "Armor class",
                         value: "",
                     },
                 ],
             },
             {
                 type: elementType.SECTION,
-                name: "Attacks:",
+                name: "Attacks",
                 value: [],
             },
             {
                 type: elementType.SECTION,
-                name: "Skills:",
+                name: "Skills",
                 value: [
                     {
                         type: elementType.TEXT,
-                        name: "Acrobatics:",
+                        name: "Acrobatics",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Athletics:",
+                        name: "Athletics",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Crafting:",
+                        name: "Crafting",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Deception:",
+                        name: "Deception",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Diplomacy:",
+                        name: "Diplomacy",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Intimidation:",
+                        name: "Intimidation",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Lore:",
+                        name: "Lore",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Medicine:",
+                        name: "Medicine",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Nature:",
+                        name: "Nature",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Occultism:",
+                        name: "Occultism",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Performance:",
+                        name: "Performance",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Religion:",
+                        name: "Religion",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Society:",
+                        name: "Society",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Stealth:",
+                        name: "Stealth",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Survival:",
+                        name: "Survival",
                         value: "",
                     },
                     {
                         type: elementType.TEXT,
-                        name: "Thievery:",
+                        name: "Thievery",
                         value: "",
                     },
                 ],
@@ -151,6 +152,6 @@ const _PF2E: ISheet = {
         ]
 };
 
-export enum template {
-    PF2E,
+export enum SheetTemplate {
+    PF2E = "Pathfinder 2nd Edition",
 }

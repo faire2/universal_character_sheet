@@ -4,7 +4,7 @@ import Login from "../../components/Login";
 import Dashboard from "../../components/dashboard/Dashboard";
 import Sheet from "../../components/sheet/Sheet";
 import React from "react";
-import {NavigationLocations, RootStackParamList} from "./locations";
+import Templates from "../../components/sheetTemplates/Templates";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -52,6 +52,30 @@ export function MyStack() {
                         title: "Character sheet",
                     }}
             />
+            <Stack.Screen
+                name={NavigationLocations.TEMPLATES}
+                component={Templates}
+                options={
+                    {
+                        title: "Sheet Templates",
+                    }}
+            />
         </Stack.Navigator>
     )
 }
+
+export enum NavigationLocations {
+    SIGNUP = "Signup",
+    LOGIN = "Login",
+    DASHBOARD = "Dashboard",
+    SHEET = "SheetView",
+    TEMPLATES = "Templates",
+}
+
+export type RootStackParamList = {
+    Signup: undefined,
+    Login: undefined,
+    Dashboard: undefined,
+    SheetView: {sheetId: string},
+    Templates: undefined,
+};

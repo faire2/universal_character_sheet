@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {NavigationLocations, RootStackParamList} from "../common/navigation/locations";
 import {loadData, saveData} from "../common/functions/asyncStorage";
 import {firebaseApp} from "../firebase/config";
 import {BasicInput, BasicLink, BasicView, Preloader} from "../common/styling/commonStyles";
@@ -10,6 +9,7 @@ import {useDb} from "../firebase/context/DbContext";
 import {collections} from "../common/constants/collections";
 import {IFirebaseError} from "../common/types/generalTypes";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
+import {NavigationLocations, RootStackParamList} from "../common/navigation/NavigationStack";
 
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.SIGNUP>
 

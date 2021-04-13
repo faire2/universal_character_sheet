@@ -1,8 +1,8 @@
 import React from "react";
 import {AppColors, BasicText, BasicView, ColoredText, RowButton, RowView} from "../../common/styling/commonStyles";
 import {View} from "react-native";
-import {NavigationLocations} from "../../common/navigation/locations";
 import {ISheet} from "../sheet/sheetTypes";
+import {NavigationLocations} from "../../common/navigation/NavigationStack";
 
 export function Sheets(props: {
     sheets: Array<ISheet>, removeSheet: any, navigation: {
@@ -21,7 +21,7 @@ export function Sheets(props: {
                     </View>
                     <RowView style={{flex: 2}}>
                         <RowButton color={AppColors.BLUE} onPress={() => props.navigation.navigate(NavigationLocations.SHEET,
-                                       {index: i})}>
+                                       {sheetId: sheet.id})}>
                             <ColoredText color={AppColors.WHITE}>
                                 Open
                             </ColoredText>
