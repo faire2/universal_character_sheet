@@ -22,9 +22,9 @@ import {NavigationLocations, RootStackParamList} from "../../common/navigation/N
 type Props = StackScreenProps<RootStackParamList, NavigationLocations.SHEET>
 
 export default function Sheet({route}: Props) {
+    const dispatch = useDispatch();
     const {sheetId} = route.params;
     const sheet: ISheet | undefined = useAppSelector(state => selectSheetById(state, sheetId));
-    const dispatch = useDispatch();
 
     const [isEditting, setIsEditing] = useState<boolean>(false);
 

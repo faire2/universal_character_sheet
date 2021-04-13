@@ -76,7 +76,6 @@ export default function Signup({navigation}: Props) {
                             );
                         // create new userData in top collection
                         const uid = res.user.uid;
-                        debugger;
                         db.collection(collections.USERS).doc(uid).set({
                             email: res.user.email,
                             displayName: displayName,

@@ -6,7 +6,7 @@ import {IDb} from "../../common/types/generalTypes";
 const DbContext = createContext({});
 
 function DbProvider(props: {children: React.ReactNode}) {
-    const [db, setDb] = useState({});
+    const [db, setDb] = useState<Firestore | null>(null);
 
     useEffect(() => {
         const db: Firestore = firebaseApp.firestore();

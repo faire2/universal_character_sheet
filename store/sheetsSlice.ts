@@ -36,11 +36,10 @@ interface ISheetParam {sheet: ISheet}
 export const addSheet = createAsyncThunk<ISheet[], ISheetParam, {state: RootState}>(
     "sheets/newSheet", async ({sheet}: ISheetParam, thunkAPI) => {
         sheet.timeStamp = Date.now();
-        const sheets: ISheet[] = thunkAPI.getState().sheets.sheets;
+        const sheets: ISheet[] = cloneDeep(thunkAPI.getState().sheets.sheets);
 
         const uid = thunkAPI.getState().user.userData.uid;
-        sheet.id = await dbForRedux.collection(collections.USERS).doc(uid).collection(collections.SHEETS).doc().id;
-        await dbForRedux.collection(collections.USERS).doc(uid).collection(collections.SHEETS).add(sheet);
+        await dbForRedux.collection(collections.USERS).doc(uid).collection(collections.SHEETS).doc(sheet.id!).set(sheet);
         await saveData(asyncStorageKeys.SHEETS, sheets);
 
         sheets.push(sheet);

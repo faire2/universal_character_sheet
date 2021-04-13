@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IUser} from "../common/types/generalTypes";
+import {RootState} from "./index";
 
 interface IUserState {
     userData: IUser
@@ -28,3 +29,5 @@ export const userSlice = createSlice({
 
 export const {signedIn} = userSlice.actions;
 export default userSlice.reducer;
+
+export const selectUser = (state: RootState) => state.user.userData;
