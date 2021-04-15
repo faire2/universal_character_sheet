@@ -28,7 +28,7 @@ export const ColumnView = styled.View`
 `;
 
 export const ViewWithWidth = styled.View<{width: number}>`
-    width: ${props => props.width}vw;
+    width: ${props => props.width}px;
 `;
 
 export const BasicInput = styled.TextInput<{value: string}>`
@@ -50,24 +50,24 @@ export const BasicText = styled.Text`
 `;
 
 export const Text25 = styled(BasicText)`
-  padding-left: 5vw;
+  padding-left: 5px;
   width: 25%;
 `;
 
 export const Text50 = styled(BasicText)`
-  padding-left: 5vw;
+  padding-left: 5px;
   width: 50%;
 `;
 
 export const Text75 = styled(BasicText)`
-  padding-left: 5vw;
+  padding-left: 5px;
   width: 75%;
 `;
 
 export const Line = styled.View`
   border-width: 0.5px;
   border-color: rgba(13,214,207,0.33);
-  margin-top: 2vw;
+  margin-top: 2px;
 `;
 
 export const RowButton = styled.TouchableOpacity<{color: AppColors}>`
@@ -87,21 +87,21 @@ export const SquareButton = styled(RowButton)`
 export const WideButton = styled(RowButton)`
   position: relative;
   margin-left: 0;
-  margin-top: 2vw;
+  margin-top: 2px;
   width: 100%;
   text-align: center;
 `;
 
 export const CircleButton = styled.TouchableOpacity<{color: AppColors}>`
-  width: 2vw;
-  height: 2vw;
-  border-radius: 2vw;
+  width: 2px;
+  height: 2px;
+  border-radius: 2px;
   background-color: ${props => props.color};
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
-  padding-top: 0.1vw;
+  padding-top: 0.1px;
 `;
 
 export const ColoredText = styled(BasicText)<{color: AppColors}>`

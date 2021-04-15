@@ -54,7 +54,6 @@ export const Section: FunctionComponent<ElementProps> = ({element}) => {
 };
 
 const SectionHeadline = styled(RowButton)`
-    font-size: larger;
-    font-weight: bolder;
+    font-size: 18px;
     padding: 10px 0 10px 5px;
 `;

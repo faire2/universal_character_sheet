@@ -60,14 +60,13 @@ const Container = styled(RowView)`
 `;
 
 const NewEntryLabel = styled(BasicText)`
-  font-size: smaller;
   text-align: right;
   padding-left: 5px;
   padding-right: 5px;
 `;
 
 const ButtonText = styled(ColoredText)`
-  font-size: smaller;
+  font-size: 12px;
 `;
 
 const ViewWithWidthAndMargin = styled(ViewWithWidth)<{ width: number }>`
