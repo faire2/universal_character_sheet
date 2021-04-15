@@ -47,7 +47,7 @@ export default function Login({navigation}: Props) {
 
     return (
         <BasicView>
-            {isLoading && <Preloader/>}
+            {isLoading ? <Preloader/> : null}
             <BasicInput placeholder="email" value={email} onChangeText={(val) => setEmail(val)}/>
             <BasicInput placeholder="password" value={password} onChangeText={(val) => setPassword(val)} maxLength={15}
                         secureTextEntry={true}/>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     AppColors,
     BasicInput,
@@ -8,7 +8,7 @@ import {
     RowButton,
     WideButton
 } from "../../common/styling/commonStyles";
-import {View} from "react-native";
+import {Platform, UIManager, View} from "react-native";
 import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
@@ -27,6 +27,15 @@ export default function Sheet({route}: Props) {
     const sheet: ISheet | undefined = useAppSelector(state => selectSheetById(state, sheetId));
 
     const [isEditting, setIsEditing] = useState<boolean>(false);
+
+    // we need to enable animations for collapsible sections
+    useEffect(() => {
+        if (Platform.OS === "android") {
+            // eslint-disable-next-line no-unused-expressions
+            UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+    }, []);
 
     if (!sheet) {
         throw new Error("Did not find sheet with id: " + sheetId);

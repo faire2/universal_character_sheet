@@ -34,11 +34,12 @@ export default function NewSheetElement() {
                 <BasicInput placeholder={"Value"} value={fieldValue}
                             onChangeText={(val: string) => onValueChange(val)}/>
             </ViewWithWidthAndMargin>
-            {controlledVisible &&
-            <RowView>
-                <NewEntryLabel>Controlled:</NewEntryLabel>
-                <CheckBox value={controlled} onValueChange={(val) => setControlled(val)}/>
-            </RowView>
+            {controlledVisible ?
+                <RowView>
+                    <NewEntryLabel>Controlled:</NewEntryLabel>
+                    <CheckBox value={controlled} onValueChange={(val) => setControlled(val)}/>
+                </RowView>
+                : null
             }
             <RowButton color={AppColors.BLUE}>
                 <ButtonText color={AppColors.WHITE}>

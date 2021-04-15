@@ -24,7 +24,7 @@ export default function App() {
                     </DbProvider>
                 </AuthProvider>
             </NavigationContainer>
-        //</Provider>
+        </Provider>
     );
 }
 
