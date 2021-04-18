@@ -36,7 +36,7 @@ export const BasicInput = styled.TextInput<{value: string}>`
     align-self: center;
     border-color: #ccc;
     border-bottom-width: 1px;
-    padding: 2%;
+    padding: 0 5px 0 5px;
 `;
 
 export const BasicLink = styled.Text`
@@ -71,7 +71,6 @@ export const Line = styled.View`
 `;
 
 export const RowButton = styled.TouchableOpacity<{color: AppColors}>`
-    margin-left: 10px;
     padding: 5px;
     background-color: ${props => props.color};
     border-radius: 5px;

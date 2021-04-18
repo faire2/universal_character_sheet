@@ -1,20 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {
-    AppColors,
-    BasicInput,
-    BasicText,
-    BasicView,
-    ColoredText,
-    RowButton,
-    WideButton
-} from "../../common/styling/commonStyles";
-import {Platform, UIManager, View} from "react-native";
+import {AppColors, BasicInput, BasicText, BasicView, ColoredText, WideButton} from "../../common/styling/commonStyles";
+
+import {Platform, Switch, UIManager, View} from "react-native";
 import {transformToJsx} from "./sheetFunctions";
 import NewSheetElement from "./NewSheetElement";
 import {StackScreenProps} from "@react-navigation/stack/lib/typescript/src/types";
 import {IElementUnion, ISheet} from "./sheetTypes";
 import {useAppSelector} from "../../store";
-import {selectSheetById, sheetNameChanged} from "../../store/sheetsSlice";
+import {selectSheetById, sheetChanged, sheetNameChanged} from "../../store/sheetsSlice";
 import styled from "styled-components/native";
 import {useDispatch} from "react-redux";
 import {NavigationLocations, RootStackParamList} from "../../common/navigation/NavigationStack";
@@ -25,8 +18,8 @@ export default function Sheet({route}: Props) {
     const dispatch = useDispatch();
     const {sheetId} = route.params;
     const sheet: ISheet | undefined = useAppSelector(state => selectSheetById(state, sheetId));
-
-    const [isEditting, setIsEditing] = useState<boolean>(false);
+    console.warn(sheet);  // todo remove
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     // we need to enable animations for collapsible sections
     useEffect(() => {
@@ -37,6 +30,10 @@ export default function Sheet({route}: Props) {
         }
     }, []);
 
+    function handleElementChange(element: IElementUnion, elementId: number[]) {
+        dispatch(sheetChanged({sheet: sheet!, element: element, elementId: elementId}));
+    }
+
     if (!sheet) {
         throw new Error("Did not find sheet with id: " + sheetId);
     } else {
@@ -44,7 +41,7 @@ export default function Sheet({route}: Props) {
         return (
             <BasicView>
                 <HeadRow>
-                    {!isEditting ?
+                    {!isEditing ?
                         <BasicText>{sheet.sheetName}</BasicText> :
                         <BasicInput placeholder={sheet.sheetName} value={sheet.sheetName}
                                     onChangeText={(e) => dispatch(sheetNameChanged({
@@ -52,14 +49,18 @@ export default function Sheet({route}: Props) {
                                         sheetName: e
                                     }))}/>
                     }
-                    <RowButton color={AppColors.BLUE} onPress={() => setIsEditing(!isEditting)}>
-                        <ColoredText color={AppColors.WHITE}>Edit mode</ColoredText>
-                    </RowButton>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={isEditing ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={() => setIsEditing(!isEditing)}
+                        value={isEditing}
+                    />
                 </HeadRow>
                 {sheetFieldsArray.map((element: IElementUnion, i: number) => {
                         return (
                             <View key={i}>
-                                {transformToJsx(element, i)}
+                                {transformToJsx(element, i, [i], handleElementChange)}
                             </View>
                         )
                     }
@@ -80,36 +81,3 @@ const HeadRow = styled.View`
     flex-direction: row;
     justify-content: space-between;
 `;
-
-// each sheet object is an array of objects representing
-/*const sheetArray =
-    [
-        {
-            type: elementType.TEXT,
-            name: "Character name",
-            value: "Character I."
-        },
-        {
-            type: elementType.CONTROLLED_NUMBER,
-            name: "Hit points",
-            value: 5
-        },
-        {
-            type: elementType.SECTION,
-            name: "Skills",
-            dataArray: [
-                {
-                    type: elementType.TEXT,
-                    name: "Athletics",
-                    value: 5
-                },
-                {
-                    type: elementType.TEXT,
-                    name: "Acrobatics",
-                    value: 15
-                },
-            ]
-        }
-    ]
-;*/
-

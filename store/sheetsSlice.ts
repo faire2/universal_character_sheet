@@ -3,7 +3,7 @@ import {cloneDeep} from "lodash"
 import {loadData, saveData} from "../common/functions/asyncStorage";
 import {asyncStorageKeys} from "../common/constants/asyncStorageKeys";
 import {RootState} from "./index";
-import {ISheet} from "../components/sheet/sheetTypes";
+import {IElementUnion, ISheet} from "../components/sheet/sheetTypes";
 import {LoadingStates} from "../common/types/generalTypes";
 import {collections} from "../common/constants/collections";
 import {dbForRedux} from "../firebase/context/DbContext";
@@ -124,6 +124,22 @@ export const sheetsSlice = createSlice({
                 sheet.sheetName = action.payload.sheetName;
             } else { console.info("Unable to change sheet to change its name: " + action.payload.sheetId) }
         },
+        sheetChanged: (state, action: PayloadAction<{sheet: ISheet, element: IElementUnion, elementId: number[]}>) => {
+            let sheet = state.sheets.find((sheet: ISheet) => sheet.id === action.payload.sheet.id);
+            if (sheet && sheet.id) {
+                // elementId is array that localizes element in sheet's element array, the array mey be multidimensional
+                // if element is second in a section that is fifth element of top array, the elementId will be [4, 1]
+                const elementId: number[] = action.payload.elementId;
+                const newElement: IElementUnion = action.payload.element;
+                let element: IElementUnion = sheet.fieldsArray[elementId[0]];
+                for (let i = 1; i < elementId.length; i++) {
+                    element = element[elementId[i]]
+                }
+                element.type = newElement.type;
+                element.name = newElement.name;
+                element.value = newElement.value;
+            } else { console.info("Unable to change sheet to change its name: " + action.payload.sheetId) }
+        }
     },
     extraReducers: builder => {
         // fetchSheetsLocally
@@ -175,7 +191,7 @@ export const sheetsSlice = createSlice({
 export default sheetsSlice.reducer;
 
 // EXPORTED ACTIONS
-export const {sheetNameChanged} = sheetsSlice.actions;
+export const {sheetNameChanged, sheetChanged} = sheetsSlice.actions;
 
 // EXPORTED SELECTORS
 export const selectAllSheets = (state: RootState) => state.sheets.sheets;
